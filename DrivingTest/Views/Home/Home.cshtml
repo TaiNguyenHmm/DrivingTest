@@ -1,0 +1,130 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang chủ - Thi bằng lái xe</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <header class="bg-white shadow-xl py-4 fixed top-0 w-full z-50">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <a href="#" class="text-3xl font-extrabold text-blue-600">Thi Lái Xe</a>
+            <nav class="hidden md:flex space-x-8 items-center">
+                <a href="#" class="text-gray-600 hover:text-blue-600 transition duration-300 font-medium">Trang chủ</a>
+                <a asp-controller="Authenticator" asp-action="Index" class="text-gray-600 hover:text-blue-600 transition duration-300 font-medium">Thi thử</a>
+                <a href="https://daotaolaixehd.com.vn/thi-ly-thuyet-lai-xe-bo-cong-an" class="text-gray-600 hover:text-blue-600 transition duration-300 font-medium">Học lý thuyết</a>
+                <a href="#" class="text-gray-600 hover:text-blue-600 transition duration-300 font-medium">Câu hỏi</a>
+                <a href="#" class="text-gray-600 hover:text-blue-600 transition duration-300 font-medium">Liên hệ</a>
+            </nav>
+            <button class="bg-blue-600 text-white font-bold py-2 px-6 rounded-full shadow-lg hover:bg-blue-700 transition duration-300 md:hidden">
+                Menu
+            </button>
+        </div>
+    </header>
+
+    <section class="bg-gradient-to-br from-blue-600 to-blue-800 text-white py-40 mt-16 shadow-inner">
+        <div class="container mx-auto px-6 text-center">
+            <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 fade-in-up">
+                Hệ thống thi bằng lái xe trực tuyến
+            </h1>
+            <p class="text-lg md:text-xl mb-10 max-w-3xl mx-auto fade-in-up" style="animation-delay: 0.2s;">
+                Ôn tập hiệu quả, làm bài thi thử sát hạch và chuẩn bị tốt nhất cho kỳ thi chính thức.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4 fade-in-up" style="animation-delay: 0.4s;">
+                <a asp-controller="Authenticator" asp-action="Index" class="bg-white text-blue-600 font-bold py-4 px-10 rounded-full shadow-2xl hover:bg-gray-200 transition duration-300 transform hover:scale-105 text-center">
+                    Bắt đầu thi thử ngay
+                </a>
+                <button onclick="window.open('https://xaydungchinhsach.chinhphu.vn/quy-dinh-moi-ve-hinh-thuc-hoc-ly-thuyet-thi-giay-phep-lai-xe-tu-1-1-2025-119241209103657314.htm', '_blank')"
+                        class="bg-transparent text-white font-bold py-4 px-10 rounded-full border-2 border-white hover:bg-white hover:text-blue-600 transition duration-300 transform hover:scale-105">
+                    Tìm hiểu thêm
+                </button>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-20 bg-gray-100">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-extrabold text-center mb-16 text-gray-900">Tại sao chọn chúng tôi?</h2>
+            <div class="grid md:grid-cols-3 gap-10">
+                <!-- Feature 1 -->
+                <a href="https://www.csgt.vn/upload/services/273963059_B%E1%BB%99%20600%20c%C3%A2u%20h%E1%BB%8Fi%20d%C3%B9ng%20cho%20s%C3%A1t%20h%E1%BA%A1ch%20l%C3%A1i%20xe%20c%C6%A1%20gi%E1%BB%9Bi%20%C4%91%C6%B0%E1%BB%9Dng%20b%E1%BB%99.pdf"
+                   target="_blank"
+                   class="bg-white rounded-3xl shadow-2xl p-8 text-center transform transition duration-500 hover:scale-105 hover:shadow-2xl fade-in-up"
+                   style="animation-delay: 0.6s;">
+
+                    <div class="bg-blue-100 text-blue-600 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.618a8.001 8.001 0 00-14.12 9.074l-2.031 2.031a1 1 0 00-.293 1.054l.586 1.171a1 1 0 001.054.293l2.031-2.031a8.001 8.001 0 009.074-14.12z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-bold text-2xl mb-2 text-gray-900">Bộ đề thi mới nhất</h3>
+                    <p class="text-gray-600">Luôn cập nhật các bộ đề thi sát hạch mới nhất theo quy định của Bộ Giao thông Vận tải.</p>
+                </a>
+
+                <!-- Feature 2 -->
+                <div class="bg-white rounded-3xl shadow-2xl p-8 text-center transform transition duration-500 hover:scale-105 hover:shadow-2xl fade-in-up" style="animation-delay: 0.8s;">
+                    <div class="bg-blue-100 text-blue-600 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-bold text-2xl mb-2 text-gray-900">Ôn tập theo chuyên đề</h3>
+                    <p class="text-gray-600">Phân loại câu hỏi theo từng chuyên đề giúp bạn dễ dàng củng cố kiến thức còn yếu.</p>
+                </div>
+                <!-- Feature 3 -->
+                <div class="bg-white rounded-3xl shadow-2xl p-8 text-center transform transition duration-500 hover:scale-105 hover:shadow-2xl fade-in-up" style="animation-delay: 1.0s;">
+                    <div class="bg-blue-100 text-blue-600 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-bold text-2xl mb-2 text-gray-900">Thi thử có hẹn giờ</h3>
+                    <p class="text-gray-600">Bài thi thử được thiết kế giống hệt thi thật, có tính giờ để bạn làm quen với áp lực thời gian.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="bg-blue-600 text-white py-24 text-center">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-bold mb-4">Sẵn sàng để vượt qua kỳ thi?</h2>
+            <p class="text-lg mb-8 max-w-3xl mx-auto">
+                Hãy bắt đầu ôn tập ngay hôm nay và tự tin chinh phục bằng lái xe của bạn. Hệ thống của chúng tôi sẽ đồng hành cùng bạn trên mọi nẻo đường.
+            </p>
+            <a asp-controller="Authenticator" asp-action="Index"
+               class="bg-white text-blue-600 font-bold py-4 px-12 rounded-full shadow-lg hover:bg-gray-100 transition duration-300 transform hover:scale-105 inline-block">
+                Bắt đầu ngay
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-12">
+        <div class="container mx-auto px-6 text-center">
+            <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8 mb-4">
+                <a href="#" class="hover:text-white transition duration-300 font-semibold">Chính sách bảo mật</a>
+                <a href="#" class="hover:text-white transition duration-300 font-semibold">Điều khoản sử dụng</a>
+                <a href="#" class="hover:text-white transition duration-300 font-semibold">Về chúng tôi</a>
+            </div>
+            <p class="text-sm mt-4">&copy; 2024 Thi bằng lái xe trực tuyến. Tất cả bản quyền đã được bảo hộ.</p>
+        </div>
+    </footer>
+    <a asp-controller="Home" asp-action="Index" class="absolute top-4 left-4 text-gray-500 hover:text-blue-600 transition duration-300 flex items-center group">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m6 4l-4 4m4-4l-4-4m8 4V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-4"></path>
+        </svg>
+        <span class="text-sm font-medium">Quay lại</span>
+    </a>
+</body>
+</html>

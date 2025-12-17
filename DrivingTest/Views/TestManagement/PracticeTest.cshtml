@@ -1,0 +1,277 @@
+﻿@model List<DrivingTest.Models.Question>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chế độ Luyện tập - Thi Lái Xe</title>
+    <!-- Thư viện Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Phông chữ Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9; /* Slate 100 */
+        }
+        /* Custom styles for answer options */
+        .answer-option {
+            transition: all 0.2s ease-in-out;
+        }
+        .answer-option:not(.disabled):hover {
+            background-color: #dbeafe; /* blue-100 */
+            border-color: #3b82f6; /* blue-500 */
+        }
+        .answer-option.selected {
+            background-color: #bfdbfe; /* blue-200 */
+            border-color: #2563eb; /* blue-600 */
+            color: #1e40af; /* blue-800 */
+        }
+        .answer-option.correct {
+            background-color: #dcfce7; /* green-100 */
+            border-color: #22c55e; /* green-500 */
+            color: #15803d; /* green-700 */
+        }
+        .answer-option.incorrect {
+            background-color: #fee2e2; /* red-100 */
+            border-color: #ef4444; /* red-500 */
+            color: #b91c1c; /* red-700 */
+        }
+        .answer-option.disabled {
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body class="bg-slate-100">
+
+    <!-- Main Container -->
+    <div class="container mx-auto p-4 md:p-8 max-w-4xl">
+
+        <!-- Header -->
+        <header class="bg-white rounded-2xl shadow-md p-6 mb-8 sticky top-4 z-10">
+            <div class="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+                <div class="flex items-center">
+                     <a asp-action="Welcone" asp-controller="Home" class="text-gray-500 hover:text-blue-600 mr-4" title="Quay lại">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </a>
+                    <h1 class="text-2xl font-bold text-gray-800">Chế độ Luyện tập</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="font-semibold text-lg">Điểm: <span id="score">0</span>/<span id="total-questions">@Model.Count</span></span>
+                </div>
+            </div>
+            <!-- Progress Bar -->
+            <div class="w-full bg-gray-200 rounded-full h-2.5 mt-4">
+                <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+            </div>
+        </header>
+
+        <!-- Question Card -->
+        <div id="question-card" class="bg-white rounded-2xl shadow-lg p-8">
+            <!-- Question Header -->
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-blue-600">Câu hỏi <span id="question-number">1</span></h2>
+            </div>
+
+            <!-- Question Content -->
+            <div id="question-content">
+                <!-- Image (optional) -->
+                <div id="question-image-container" class="mb-4 hidden">
+                    <img id="question-image" src="" alt="Hình ảnh câu hỏi" class="max-w-sm mx-auto rounded-lg shadow-md">
+                </div>
+                <!-- Question Text -->
+                <p id="question-text" class="text-lg text-gray-800 leading-relaxed mb-6">Nội dung câu hỏi sẽ được hiển thị ở đây...</p>
+            </div>
+
+            <!-- Answer Options -->
+            <div id="answer-options" class="space-y-4">
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between mt-8">
+            <button id="prev-btn" class="bg-white hover:bg-gray-100 text-gray-800 font-bold py-3 px-6 rounded-full shadow-md transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                Câu trước
+            </button>
+            <button id="next-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full shadow-md transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                Câu tiếp theo
+            </button>
+            <button id="submit-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-full shadow-md transition duration-300 hidden">
+                Xem kết quả
+            </button>
+        </div>
+    </div>
+    
+    <!-- Result Modal -->
+    <div id="result-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">Hoàn thành!</h2>
+            <p class="text-lg text-gray-600 mb-6">
+                Bạn đã trả lời đúng <br> <span id="final-score" class="text-5xl font-extrabold text-blue-600">0/@Model.Count</span>
+            </p>
+            <div class="flex flex-col space-y-3">
+                 <button id="retry-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full shadow-md transition duration-300">Làm lại</button>
+                 <a asp-action="Welcone" asp-controller="Home" class="bg-white hover:bg-gray-100 text-gray-800 font-bold py-3 px-6 rounded-full shadow-md transition duration-300">Về trang chính</a>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const questions = @Html.Raw(Json.Serialize(Model.Select(q => new {
+                id = q.QuestionId,
+                text = q.QuestionText,
+                imageUrl = q.ImageUrl,
+                answers = q.Answers.Select(a => new { key = a.OptionKey, text = a.OptionText }),
+                correctAnswer = q.CorrectAnswer
+            })));
+
+            let currentQuestionIndex = 0;
+            let userAnswers = new Array(questions.length).fill(null);
+            let score = 0;
+
+            const questionNumberEl = document.getElementById('question-number');
+            const questionTextEl = document.getElementById('question-text');
+            const questionImageContainerEl = document.getElementById('question-image-container');
+            const questionImageEl = document.getElementById('question-image');
+            const answerOptionsEl = document.getElementById('answer-options');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const submitBtn = document.getElementById('submit-btn');
+            const scoreEl = document.getElementById('score');
+            const totalQuestionsEl = document.getElementById('total-questions');
+            const progressBar = document.getElementById('progress-bar');
+            const resultModal = document.getElementById('result-modal');
+            const finalScoreEl = document.getElementById('final-score');
+            const retryBtn = document.getElementById('retry-btn');
+
+
+            // --- FUNCTIONS ---
+            function loadQuestion(index) {
+                const question = questions[index];
+                
+                questionNumberEl.textContent = index + 1;
+                questionTextEl.textContent = question.text;
+                
+                if (question.imageUrl && question.imageUrl.length > 0) {
+                    questionImageEl.src = question.imageUrl;
+                    questionImageContainerEl.classList.remove('hidden');
+                } else {
+                    questionImageContainerEl.classList.add('hidden');
+                }
+
+                answerOptionsEl.innerHTML = '';
+                question.answers.forEach(answer => {
+                    const optionEl = document.createElement('button');
+                    optionEl.className = 'answer-option w-full text-left p-4 border-2 rounded-lg font-medium';
+                    optionEl.dataset.key = answer.key;
+                    optionEl.innerHTML = `<span class="font-bold mr-2">${answer.key}.</span> ${answer.text}`;
+                    
+                    optionEl.addEventListener('click', () => handleAnswerSelection(answer.key));
+                    answerOptionsEl.appendChild(optionEl);
+                });
+
+                updateUIState();
+            }
+
+            function handleAnswerSelection(selectedKey) {
+                if (userAnswers[currentQuestionIndex] !== null) return;
+
+                userAnswers[currentQuestionIndex] = selectedKey;
+                const question = questions[currentQuestionIndex];
+                const isCorrect = selectedKey === question.correctAnswer;
+
+                if (isCorrect) {
+                    score++;
+                }
+
+                const allOptions = answerOptionsEl.querySelectorAll('.answer-option');
+                allOptions.forEach(opt => {
+                    opt.classList.add('disabled');
+                    const key = opt.dataset.key;
+                    if (key === question.correctAnswer) {
+                        opt.classList.add('correct');
+                    } else if (key === selectedKey) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+                
+                updateUIState();
+            }
+
+            function updateUIState() {
+                scoreEl.textContent = score;
+                const answeredCount = userAnswers.filter(a => a !== null).length;
+                progressBar.style.width = `${(answeredCount / questions.length) * 100}%`;
+
+                prevBtn.disabled = currentQuestionIndex === 0;
+                nextBtn.disabled = currentQuestionIndex === questions.length - 1;
+                
+                if (currentQuestionIndex === questions.length - 1) {
+                    nextBtn.classList.add('hidden');
+                    submitBtn.classList.remove('hidden');
+                } else {
+                    nextBtn.classList.remove('hidden');
+                    submitBtn.classList.add('hidden');
+                }
+
+                const selectedAnswer = userAnswers[currentQuestionIndex];
+                if (selectedAnswer) {
+                     const allOptions = answerOptionsEl.querySelectorAll('.answer-option');
+                     const question = questions[currentQuestionIndex];
+                     allOptions.forEach(opt => {
+                        opt.classList.add('disabled');
+                        const key = opt.dataset.key;
+                        if (key === question.correctAnswer) {
+                            opt.classList.add('correct');
+                        } else if (key === selectedAnswer) {
+                            opt.classList.add('incorrect');
+                        }
+                    });
+                }
+            }
+            
+            function showResults() {
+                finalScoreEl.textContent = `${score}/${questions.length}`;
+                resultModal.classList.remove('hidden');
+            }
+            
+            function resetTest() {
+                window.location.reload();
+            }
+
+            // --- EVENT LISTENERS ---
+            nextBtn.addEventListener('click', () => {
+                if (currentQuestionIndex < questions.length - 1) {
+                    currentQuestionIndex++;
+                    loadQuestion(currentQuestionIndex);
+                }
+            });
+
+            prevBtn.addEventListener('click', () => {
+                if (currentQuestionIndex > 0) {
+                    currentQuestionIndex--;
+                    loadQuestion(currentQuestionIndex);
+                }
+            });
+            
+            submitBtn.addEventListener('click', showResults);
+            retryBtn.addEventListener('click', resetTest);
+
+            // --- INITIALIZATION ---
+            if (questions && questions.length > 0) {
+                loadQuestion(currentQuestionIndex);
+            } else {
+                document.getElementById('question-card').innerHTML = '<p class="text-center text-gray-600">Không có câu hỏi nào để hiển thị.</p>';
+                document.querySelector('.flex.justify-between.mt-8').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

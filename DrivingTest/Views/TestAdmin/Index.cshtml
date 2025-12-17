@@ -1,0 +1,570 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo Bài Thi Mới</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <style>
+        :root {
+            --background-color: #e0e5ec;
+            --primary-color: #6c5ce7;
+            --accent-color: #ff6b6b;
+            --text-dark: #333333;
+            --text-light: #555555;
+            --neumorphic-shadow-light: #ffffff;
+            --neumorphic-shadow-dark: #a8b0c0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 2rem;
+            background-color: var(--background-color);
+            box-shadow: 10px 10px 20px var(--neumorphic-shadow-dark), -10px -10px 20px var(--neumorphic-shadow-light);
+            transition: all 0.3s ease;
+        }
+
+        .card-header {
+            background-color: var(--background-color);
+            border-radius: 2rem 2rem 0 0 !important;
+            padding: 2.5rem 2rem;
+            border-bottom: none;
+            box-shadow: inset 5px 5px 10px var(--neumorphic-shadow-dark), inset -5px -5px 10px var(--neumorphic-shadow-light);
+            position: relative;
+        }
+
+            .card-header h1 {
+                color: var(--primary-color);
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            }
+
+        .btn-neumorphic {
+            border: none;
+            border-radius: 2rem;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            background-color: var(--background-color);
+            box-shadow: 6px 6px 12px var(--neumorphic-shadow-dark), -6px -6px 12px var(--neumorphic-shadow-light);
+            transition: all 0.3s ease;
+            color: var(--text-dark);
+        }
+
+            .btn-neumorphic:hover {
+                color: var(--primary-color);
+                transform: translateY(-2px);
+                box-shadow: 8px 8px 16px var(--neumorphic-shadow-dark), -8px -8px 16px var(--neumorphic-shadow-light);
+            }
+
+            .btn-neumorphic:active {
+                box-shadow: inset 6px 6px 12px var(--neumorphic-shadow-dark), inset -6px -6px 12px var(--neumorphic-shadow-light);
+                transform: translateY(0);
+            }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 6px 6px 12px var(--neumorphic-shadow-dark), -6px -6px 12px var(--neumorphic-shadow-light);
+        }
+
+            .btn-primary:hover {
+                background-color: #5c4cd8;
+                box-shadow: 8px 8px 16px var(--neumorphic-shadow-dark), -8px -8px 16px var(--neumorphic-shadow-light);
+            }
+
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+            box-shadow: 6px 6px 12px var(--neumorphic-shadow-dark), -6px -6px 12px var(--neumorphic-shadow-light);
+        }
+
+            .btn-success:hover {
+                background-color: #1e7e34;
+            }
+
+        .form-control, .form-select {
+            border: none;
+            border-radius: 2rem;
+            background-color: var(--background-color);
+            box-shadow: inset 4px 4px 8px var(--neumorphic-shadow-dark), inset -4px -4px 8px var(--neumorphic-shadow-light);
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+        }
+
+            .form-control::placeholder, .form-select::placeholder {
+                color: var(--text-light);
+            }
+
+            .form-control:focus, .form-select:focus {
+                outline: none;
+                box-shadow: inset 2px 2px 5px var(--neumorphic-shadow-dark), inset -2px -2px 5px var(--neumorphic-shadow-light);
+                border: 1px solid var(--primary-color);
+            }
+
+        .input-group-text {
+            border: none;
+            border-radius: 2rem 0 0 2rem;
+            background-color: var(--background-color);
+            box-shadow: inset 4px 4px 8px var(--neumorphic-shadow-dark), inset -4px -4px 8px var(--neumorphic-shadow-light);
+        }
+
+            .input-group-text .form-check-input {
+                box-shadow: 2px 2px 4px var(--neumorphic-shadow-dark), -2px -2px 4px var(--neumorphic-shadow-light);
+                transition: all 0.3s ease;
+            }
+
+                .input-group-text .form-check-input:hover {
+                    box-shadow: 4px 4px 8px var(--neumorphic-shadow-dark), -4px -4px 8px var(--neumorphic-shadow-light);
+                }
+
+        .input-group .form-control {
+            border-left: none;
+            border-radius: 0 2rem 2rem 0;
+            box-shadow: inset 4px 4px 8px var(--neumorphic-shadow-dark), inset -4px -4px 8px var(--neumorphic-shadow-light);
+        }
+
+            .input-group .form-control:focus {
+                border-left: none;
+            }
+
+        .form-label {
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        h1, h2, h5 {
+            color: var(--text-dark);
+        }
+
+        .modal-content {
+            background-color: var(--background-color);
+            border-radius: 1rem;
+            box-shadow: 10px 10px 20px var(--neumorphic-shadow-dark), -10px -10px 20px var(--neumorphic-shadow-light);
+        }
+
+        .tooltip-custom {
+            background-color: var(--text-dark);
+            color: var(--background-color);
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .exit-btn {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: var(--text-dark);
+            box-shadow: 6px 6px 12px var(--neumorphic-shadow-dark), -6px -6px 12px var(--neumorphic-shadow-light);
+        }
+
+            .exit-btn:hover {
+                color: var(--accent-color);
+            }
+
+        .img-preview {
+            max-width: 12rem;
+            max-height: 8rem;
+            display: block;
+            border-radius: 0.75rem;
+            object-fit: cover;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container py-5">
+        <div class="card shadow-lg animate__animated animate__fadeInDown">
+            <div class="card-header text-center p-5">
+                <button class="btn btn-neumorphic exit-btn" onclick="exitApp()" title="Thoát">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+                <h1 class="card-title mb-0 fs-2 fw-bold animate__animated animate__pulse animate__infinite">
+                    <i class="fas fa-file-alt me-2"></i> Tạo Bài Thi Mới
+                </h1>
+            </div>
+            <div class="card-body p-5">
+                <form id="createTestForm" onsubmit="submitForm(event)">
+                    <h2 class="fs-4 fw-bold mb-4 text-center">Thông tin bài thi</h2>
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="testName" class="form-label fw-semibold">Tên Bài Thi</label>
+                                <input type="text" class="form-control px-4 py-2" id="testName" name="TestName" required placeholder="Ví dụ: Bài thi lý thuyết hạng B1">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="questionCount" class="form-label fw-semibold">Số Lượng Câu Hỏi</label>
+                                <input type="number" class="form-control px-4 py-2" id="questionCount" name="QuestionCount" required min="1" max="100" placeholder="Số lượng">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="duration" class="form-label fw-semibold">Thời Gian (phút)</label>
+                                <input type="number" class="form-control px-4 py-2" id="duration" name="DurationMinutes" required min="1" max="120" placeholder="Thời gian">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group my-4">
+                        <label for="passingScore" class="form-label fw-semibold">Điểm Đậu Tối Thiểu</label>
+                        <input type="number" class="form-control px-4 py-2" id="passingScore" name="PassingScore" required min="1" max="100" placeholder="Ví dụ: 25">
+                    </div>
+
+                    <div class="form-group mb-5">
+                        <label for="testCategory" class="form-label fw-semibold">Loại Bài Thi</label>
+                        <select class="form-control px-4 py-2" id="testCategory" name="Category" required>
+                            <option value="">-- Chọn loại bài thi --</option>
+                            <option value="A1">Hạng A1</option>
+                            <option value="B2">Hạng B2</option>
+                            <option value="C">Hạng C</option>
+                        </select>
+                    </div>
+
+                    <hr class="my-5">
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="fs-4 fw-bold mb-0">Danh sách câu hỏi</h2>
+                        <button type="button" class="btn btn-neumorphic rounded-pill px-4 py-2" onclick="addQuestion()">
+                            <i class="fas fa-plus-circle me-2" style="color: var(--primary-color);"></i>Thêm Câu Hỏi
+                        </button>
+                    </div>
+
+                    <div id="questionsContainer">
+                    </div>
+
+                    <!-- Pagination Controls -->
+                    <div class="d-flex justify-content-center mt-4">
+                        <nav aria-label="Question Pagination">
+                            <ul class="pagination">
+                                <li class="page-item">
+                                    <button type="button" id="prevPageBtn" class="btn btn-neumorphic rounded-pill me-2" onclick="changePage(-1)" disabled>
+                                        <i class="fas fa-arrow-left me-2"></i>Trang trước
+                                    </button>
+                                </li>
+                                <li class="page-item">
+                                    <button type="button" id="nextPageBtn" class="btn btn-neumorphic rounded-pill" onclick="changePage(1)">
+                                        Trang sau<i class="fas fa-arrow-right ms-2"></i>
+                                    </button>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+
+                    <hr class="my-5">
+
+                    <div id="loadingIndicator" class="text-center d-none">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Đang tạo bài thi, vui lòng chờ...</p>
+                    </div>
+
+                    <button type="submit" id="submitButton" class="btn btn-neumorphic btn-primary w-100 py-3 rounded-pill fw-bold fs-5 animate__animated animate__headShake animate__infinite">
+                        Tạo Bài Thi
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Alert Modal -->
+    <div class="modal fade" id="customAlertModal" tabindex="-1" aria-labelledby="customAlertModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="customAlertModalLabel">Thông báo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="alertMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-neumorphic" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Link Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let questionsData = []; 
+        const questionsPerPage = 5; 
+        let currentPage = 1;
+        const alphabet = 'ABCD';
+
+        function renderQuestions() {
+            const questionsContainer = document.getElementById('questionsContainer');
+            questionsContainer.innerHTML = '';
+            const start = (currentPage - 1) * questionsPerPage;
+            const end = start + questionsPerPage;
+            const questionsToShow = questionsData.slice(start, end);
+
+            if (questionsToShow.length === 0 && questionsData.length > 0) {
+                currentPage = Math.ceil(questionsData.length / questionsPerPage);
+                renderQuestions(); 
+                return;
+            }
+
+            questionsToShow.forEach((question, indexInPage) => {
+                const globalIndex = start + indexInPage;
+                const questionBlock = document.createElement('div');
+                questionBlock.className = 'card p-4 mb-4 border-0 rounded-4 animate__animated animate__fadeInUp';
+                questionBlock.id = `questionBlock_${globalIndex}`;
+
+                let answersHtml = '';
+                question.Answers.forEach((answer, aIndex) => {
+                    const checked = question.CorrectAnswer === alphabet[aIndex] ? 'checked' : '';
+                    answersHtml += `
+                        <div class="input-group mb-3 animate__animated animate__fadeIn">
+                            <div class="input-group-text rounded-start-pill">
+                                <input class="form-check-input mt-0" type="radio" name="questions[${globalIndex}].CorrectAnswer" value="${alphabet[aIndex]}" aria-label="Đánh dấu đáp án đúng" ${checked} required>
+                            </div>
+                            <input type="text" class="form-control rounded-end-pill" name="questions[${globalIndex}].Answers[${aIndex}].OptionText" placeholder="Nội dung đáp án ${alphabet[aIndex]}" value="${escapeHtml(answer.OptionText)}" required>
+                        </div>
+                    `;
+                });
+
+                const imgPreviewHtml = question.ImageUrl ? `
+                    <div class="mb-3 img-preview-wrap">
+                        <img src="${question.ImageUrl}" alt="Ảnh minh họa" class="img-preview" />
+                        <p class="text-sm text-muted mt-1">Ảnh hiện tại</p>
+                    </div>
+                ` : '';
+
+                questionBlock.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h5 class="fw-bold mb-0 text-secondary">Câu hỏi ${globalIndex + 1}</h5>
+                        <button type="button" class="btn btn-neumorphic btn-sm rounded-circle shadow-sm" onclick="removeQuestion(${globalIndex})">
+                            <i class="fas fa-times" style="color: var(--accent-color);"></i>
+                        </button>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="questionText_${globalIndex}" class="form-label">Nội dung câu hỏi</label>
+                        <textarea class="form-control rounded-3" id="questionText_${globalIndex}" name="questions[${globalIndex}].QuestionText" rows="3" required>${escapeHtml(question.QuestionText)}</textarea>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="form-label">Ảnh minh họa</label>
+                        ${imgPreviewHtml}
+                        <input type="file" accept="image/*" onchange="handleImageSelect(${globalIndex}, this)" class="form-control mb-2" />
+                        <input type="hidden" name="questions[${globalIndex}].ImageUrl" value="${question.ImageUrl || ''}" />
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="questionCategory_${globalIndex}" class="form-label">Phân loại câu hỏi</label>
+                        <input type="text" class="form-control rounded-pill px-4" id="questionCategory_${globalIndex}" name="questions[${globalIndex}].Category" required placeholder="Ví dụ: Câu hỏi lý thuyết, Biển báo..." value="${escapeHtml(question.Category || '')}">
+                    </div>
+                    <h6 class="fw-bold mt-4 mb-2" style="color: var(--primary-color);">Các đáp án</h6>
+                    <div class="answers-container" id="answersContainer_${globalIndex}">
+                        ${answersHtml}
+                    </div>
+                    <div class="d-flex justify-content-end mt-4">
+                        <button type="button" class="btn btn-neumorphic btn-sm me-2 rounded-pill px-3" onclick="addAnswer(${globalIndex})">
+                            <i class="fas fa-plus me-1"></i>Thêm Đáp án
+                        </button>
+                        <button type="button" class="btn btn-neumorphic btn-sm rounded-pill px-3" onclick="removeAnswer(${globalIndex})">
+                            <i class="fas fa-minus me-1"></i>Xóa Đáp án cuối
+                        </button>
+                    </div>
+                `;
+                questionsContainer.appendChild(questionBlock);
+            });
+            updatePaginationControls();
+        }
+
+        function escapeHtml(unsafe) {
+            if (unsafe == null) return '';
+            return String(unsafe).replace(/[&<>"'`]/g, function (m) { return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;', '`':'&#96;'})[m]; });
+        }
+
+        function updatePaginationControls() {
+            const totalQuestions = questionsData.length;
+            const totalPages = Math.max(1, Math.ceil(totalQuestions / questionsPerPage));
+            document.getElementById('prevPageBtn')?.setAttribute('disabled', currentPage === 1 ? 'disabled' : null);
+            document.getElementById('nextPageBtn')?.setAttribute('disabled', currentPage >= totalPages ? 'disabled' : null);
+        }
+
+        function changePage(direction) {
+            saveCurrentPageData();
+            currentPage += direction;
+            renderQuestions();
+        }
+
+        function saveCurrentPageData() {
+            const start = (currentPage - 1) * questionsPerPage;
+            const questionsInPage = document.querySelectorAll('#questionsContainer > .card');
+            questionsInPage.forEach((qBlock, indexInPage) => {
+                const globalIndex = start + indexInPage;
+                if (questionsData[globalIndex]) {
+                    questionsData[globalIndex].QuestionText = qBlock.querySelector('textarea')?.value || '';
+                    questionsData[globalIndex].ImageUrl = qBlock.querySelector('input[type="hidden"][name*="ImageUrl"]')?.value || '';
+                    questionsData[globalIndex].Category = qBlock.querySelector('input[name*="Category"]')?.value || '';
+
+                    const correctAnswerInput = qBlock.querySelector('input[name*="CorrectAnswer"]:checked');
+                    questionsData[globalIndex].CorrectAnswer = correctAnswerInput ? correctAnswerInput.value : '';
+
+                    const answers = [];
+                    qBlock.querySelectorAll('.answers-container input[type="text"]').forEach((input, aIndex) => {
+                        answers.push({ OptionKey: alphabet[aIndex], OptionText: input.value });
+                    });
+                    questionsData[globalIndex].Answers = answers;
+                }
+            });
+        }
+
+        function addQuestion() {
+            saveCurrentPageData();
+            const newQuestion = { QuestionText: '', ImageUrl: '', Category: '', CorrectAnswer: '', Answers: [ { OptionKey: 'A', OptionText: '' }, { OptionKey: 'B', OptionText: '' } ] };
+            questionsData.push(newQuestion);
+            currentPage = Math.ceil(questionsData.length / questionsPerPage);
+            renderQuestions();
+        }
+
+        function removeQuestion(qIndex) {
+            saveCurrentPageData();
+            questionsData.splice(qIndex, 1);
+            renderQuestions();
+        }
+
+        function addAnswer(qIndex) {
+            if (questionsData[qIndex].Answers.length < 4) { questionsData[qIndex].Answers.push({ OptionKey: alphabet[questionsData[qIndex].Answers.length], OptionText: '' }); renderQuestions(); }
+            else showCustomAlert('Một câu hỏi chỉ có tối đa 4 đáp án (A, B, C, D).');
+        }
+
+        function removeAnswer(qIndex) {
+            if (questionsData[qIndex].Answers.length > 2) { questionsData[qIndex].Answers.pop(); renderQuestions(); }
+            else showCustomAlert('Mỗi câu hỏi phải có ít nhất 2 đáp án.');
+        }
+
+        function showCustomAlert(message) { const modal = document.getElementById('customAlertModal'); document.getElementById('alertMessage').textContent = message; new bootstrap.Modal(modal).show(); }
+        function exitApp() { window.history.back(); }
+
+        async function handleImageSelect(index, input) {
+            const file = input.files && input.files[0];
+            if (!file) return;
+
+            // show a temporary preview
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const wrapper = input.parentElement.querySelector('.img-preview-wrap');
+                if (wrapper) wrapper.innerHTML = `<img src="${e.target.result}" class="img-preview" alt="Ảnh tạm" />`;
+            };
+            reader.readAsDataURL(file);
+
+            // upload
+            await uploadImage(index, file, input);
+        }
+
+        async function uploadImage(index, file, inputElement) {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const resp = await fetch('/TestAdmin/UploadImage', { method: 'POST', body: formData });
+                const result = await resp.json();
+                if (!resp.ok) throw new Error(result?.message || 'Upload failed');
+
+                const imageUrl = result.imageUrl;
+                // update questionsData
+                questionsData[index].ImageUrl = imageUrl;
+
+                // update hidden input value in current DOM
+                const qBlock = document.getElementById(`questionBlock_${index}`);
+                if (qBlock) {
+                    const hidden = qBlock.querySelector('input[type="hidden"][name*="ImageUrl"]');
+                    if (hidden) hidden.value = imageUrl;
+
+                    // if no preview wrapper, create one
+                    let wrapper = qBlock.querySelector('.img-preview-wrap');
+                    if (!wrapper) {
+                        wrapper = document.createElement('div');
+                        wrapper.className = 'mb-3 img-preview-wrap';
+                        qBlock.querySelector('input[type="file"]').insertAdjacentElement('beforebegin', wrapper);
+                    }
+                    wrapper.innerHTML = `<img src="${imageUrl}" class="img-preview" alt="Ảnh minh họa" /><p class="text-sm text-muted mt-1">Ảnh hiện tại</p>`;
+                }
+
+            } catch (err) {
+                console.error(err);
+                showCustomAlert('Không thể upload ảnh: ' + (err.message || err));
+            }
+        }
+
+        async function submitForm(event) {
+            event.preventDefault();
+            saveCurrentPageData();
+
+            const form = document.getElementById('createTestForm');
+            const formData = new FormData(form);
+
+            const data = {
+                TestName: String(formData.get('TestName') || ''),
+                QuestionCount: parseInt(formData.get('QuestionCount') || '0', 10),
+                DurationMinutes: parseInt(formData.get('DurationMinutes') || '0', 10),
+                PassingScore: parseInt(formData.get('PassingScore') || '0', 10),
+                Category: String(formData.get('Category') || ''),
+                Questions: questionsData
+            };
+
+            const allQuestionsValid = data.Questions.every(q => q.CorrectAnswer !== '' && q.Answers && q.Answers.length >= 2);
+            if (!allQuestionsValid) { showCustomAlert('Vui lòng chọn đáp án đúng cho tất cả các câu hỏi và đảm bảo mỗi câu có ít nhất 2 đáp án.'); return; }
+
+            document.getElementById('submitButton').classList.add('d-none');
+            document.getElementById('loadingIndicator').classList.remove('d-none');
+
+            try {
+                const resp = await fetch('/TestAdmin/Create', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+                const result = await resp.json();
+                if (!resp.ok) throw new Error(result?.message || 'Lỗi server');
+
+                showCustomAlert('Bài thi đã được tạo thành công! CategoryId: ' + result.categoryId);
+                document.getElementById('submitButton').classList.remove('d-none');
+                document.getElementById('loadingIndicator').classList.add('d-none');
+                form.reset(); questionsData = []; currentPage = 1; renderQuestions();
+            } catch (err) {
+                console.error(err);
+                showCustomAlert('Tạo bài thi thất bại: ' + (err.message || err));
+                document.getElementById('submitButton').classList.remove('d-none');
+                document.getElementById('loadingIndicator').classList.add('d-none');
+            }
+        }
+
+        window.onload = function() { addQuestion(); };
+    </script>
+
+</body>
+</html>

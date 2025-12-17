@@ -1,0 +1,145 @@
+﻿@model DrivingTest.Models.User
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông tin cá nhân</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9;
+        }
+
+        .tab-btn.active {
+            border-color: #3b82f6;
+            color: #3b82f6;
+            background-color: #eff6ff;
+        }
+    </style>
+</head>
+<body class="bg-slate-100">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-4xl">
+        <!-- Header -->
+        <header class="mb-8">
+            <a asp-action="Welcone" asp-controller="Home" class="text-gray-600 hover:text-blue-600 inline-flex items-center mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Quay lại Bảng điều khiển
+            </a>
+            <h1 class="text-4xl font-extrabold text-gray-800">Hồ Sơ Cá Nhân</h1>
+            <p class="text-lg text-gray-500">Quản lý thông tin tài khoản của bạn.</p>
+        </header>
+
+        <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+            <!-- Tabs -->
+            <div class="border-b border-gray-200 mb-8">
+                <nav class="flex space-x-6">
+                    <button id="profile-tab" class="tab-btn py-3 px-1 border-b-2 font-semibold text-gray-500 hover:text-blue-500 transition active">
+                        Thông tin cá nhân
+                    </button>
+                    <button id="password-tab" class="tab-btn py-3 px-1 border-b-2 font-semibold text-gray-500 hover:text-blue-500 transition">
+                        Đổi mật khẩu
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Profile Information Form -->
+            <div id="profile-content">
+                <form asp-action="UpdateProfile" asp-controller="Home" method="post" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Editable Fields -->
+                        <div>
+                            <label for="username" class="block text-sm font-medium text-gray-700">Tên đăng nhập (Username)</label>
+                            <input type="text" id="username" name="Username" value="@Model.Username" class="mt-1 block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                            <input type="email" id="email" name="Email" value="@Model.Email" class="mt-1 block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                    </div>
+                    <hr class="my-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Read-only Fields -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">User ID</label>
+                            <p class="mt-1 text-lg font-semibold text-gray-500">@Model.UserId</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Vai trò</label>
+                            <p class="mt-1 text-lg font-semibold text-gray-500">@(Model.Role == 0 ? "Người dùng" : "Quản trị viên")</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Ngày tham gia</label>
+                            <p class="mt-1 text-lg font-semibold text-gray-500">
+                                @(Model.CreatedAt?.ToString("dd/MM/yyyy") ?? "Chưa có ngày tạo")
+                            </p>
+
+                        </div>
+                    </div>
+                    <div class="flex justify-end pt-4">
+                        <button type="submit" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-blue-700 transition duration-300">
+                            Lưu thay đổi
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Change Password Form -->
+            <div id="password-content" class="hidden">
+
+                <form asp-action="ChangePassword" asp-controller="Home" method="post" class="space-y-6 max-w-md mx-auto">
+                    <div>
+                        <label for="current-password" class="block text-sm font-medium text-gray-700">Mật khẩu hiện tại</label>
+                        <input type="password" id="current-password" name="CurrentPassword" required class="mt-1 block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="new-password" class="block text-sm font-medium text-gray-700">Mật khẩu mới</label>
+                        <input type="password" id="new-password" name="NewPassword" required class="mt-1 block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="confirm-password" class="block text-sm font-medium text-gray-700">Xác nhận mật khẩu mới</label>
+                        <input type="password" id="confirm-password" name="ConfirmPassword" required class="mt-1 block w-full px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div class="flex justify-end pt-4">
+                        <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-blue-700 transition duration-300">
+                            Đổi mật khẩu
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const profileTab = document.getElementById('profile-tab');
+            const passwordTab = document.getElementById('password-tab');
+            const profileContent = document.getElementById('profile-content');
+            const passwordContent = document.getElementById('password-content');
+
+            profileTab.addEventListener('click', () => {
+                profileContent.classList.remove('hidden');
+                passwordContent.classList.add('hidden');
+                profileTab.classList.add('active');
+                passwordTab.classList.remove('active');
+            });
+
+            passwordTab.addEventListener('click', () => {
+                profileContent.classList.add('hidden');
+                passwordContent.classList.remove('hidden');
+                profileTab.classList.remove('active');
+                passwordTab.classList.add('active');
+            });
+        });
+    </script>
+
+</body>
+</html>

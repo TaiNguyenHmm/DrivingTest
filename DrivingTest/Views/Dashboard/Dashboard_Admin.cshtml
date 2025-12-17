@@ -1,0 +1,771 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model DrivingTest.ViewModels.DashboardViewModel
+
+
+
+@using DrivingTest.Models
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang quản trị hệ thống thi bằng lái xe</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <script src="/js/JavaScript.js" asp-append-version="true"></script>
+</head>
+
+<body class="flex flex-col md:flex-row min-h-screen bg-gray-100 font-sans">
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar p-6 flex flex-col h-full overflow-y-auto">
+        <div class="flex items-center justify-between mb-8">
+            <h1 class="text-xl font-bold text-white">Dashboard Admin</h1>
+            <button id="close-sidebar-btn" class="text-gray-400 hover:text-white md:hidden">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <nav class="flex-grow">
+            <ul class="space-y-4">
+                <li>
+                    <button data-tab="dashboard" class="tab-btn w-full flex items-center p-3 rounded-lg text-left text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200 active-tab">
+                        <i class="fas fa-chart-line mr-3 w-5 h-5"></i>
+                        <span class="font-medium">Tổng quan</span>
+                    </button>
+                </li>
+                <li>
+                    <button data-tab="users" class="tab-btn w-full flex items-center p-3 rounded-lg text-left text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200">
+                        <i class="fas fa-users mr-3 w-5 h-5"></i>
+                        <span class="font-medium">Quản lý người dùng</span>
+                    </button>
+                </li>
+                <li>
+                    <button data-tab="questions" class="tab-btn w-full flex items-center p-3 rounded-lg text-left text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200">
+                        <i class="fas fa-question-circle mr-3 w-5 h-5"></i>
+                        <span class="font-medium">Quản lý câu hỏi</span>
+                    </button>
+                </li>
+                <!-- Sidebar Buttons -->
+                <li>
+                    <button data-tab="tests" class="tab-btn w-full flex items-center p-3 rounded-lg text-left text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200">
+                        <i class="fas fa-file-invoice mr-3 w-5 h-5"></i>
+                        <span class="font-medium">Quản lý bài thi</span>
+                    </button>
+                </li>
+                <li>
+                    <button data-tab="feedback" class="tab-btn w-full flex items-center p-3 rounded-lg text-left text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200">
+                        <i class="fas fa-comments mr-3 w-5 h-5"></i>
+                        <span class="font-medium">Phản hồi</span>
+                    </button>
+                </li>
+
+            </ul>
+        </nav>
+        <div class="mt-8">
+            <a asp-controller="Authenticator" asp-action="Logout"
+               class="flex items-center p-3 rounded-lg text-gray-400 hover:bg-gray-700 hover:text-white transition-colors duration-200">
+                <i class="fas fa-sign-out-alt mr-3 w-5 h-5"></i>
+                <span class="font-medium">Đăng xuất</span>
+            </a>
+        </div>
+
+
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content flex-grow p-6 md:p-10 overflow-y-auto">
+        <header class="flex items-center justify-between mb-6">
+            <button id="open-sidebar-btn" class="p-2 text-gray-600 rounded-md md:hidden hover:bg-gray-200">
+                <i class="fas fa-bars"></i>
+            </button>
+            <h2 id="page-title" class="text-2xl md:text-3xl font-bold text-gray-800">Tổng quan</h2>
+        </header>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="stat-card">
+                    <div>
+                        <p class="text-gray-500 text-sm">Tổng người dùng</p>
+                        <p id="stat-users" class="text-2xl font-bold text-gray-800 mt-1">@Model.TotalUsers</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div>
+                        <p class="text-gray-500 text-sm">Tổng câu hỏi</p>
+                        <p id="stat-questions" class="text-2xl font-bold text-gray-800 mt-1">@Model.TotalQuestions</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div>
+                        <p class="text-gray-500 text-sm">Tổng bài thi</p>
+                        <p id="stat-tests" class="text-2xl font-bold text-gray-800 mt-1">@Model.TotalTests</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div>
+                        <p class="text-gray-500 text-sm">Phản hồi chờ xử lý</p>
+                        <p id="stat-feedback" class="text-2xl font-bold text-gray-800 mt-1">@Model.PendingFeedbackCount</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg p-6 shadow">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4">Hoạt động gần đây</h3>
+                <ul class="space-y-4 text-gray-600" id="activity-list">
+                    @if (Model.UserActivityLogs != null && Model.UserActivityLogs.Any())
+                    {
+                        foreach (var log in Model.UserActivityLogs)
+                        {
+                            <li>
+                                <span class="font-semibold">[@log.Timestamp]</span>
+                                <span class="font-semibold">@log.Details</span>
+                            </li>
+
+                        }
+                    }
+                    else
+                    {
+                        <li>Không có hoạt động gần đây.</li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+        <!-- =============================================================== -->
+        <!-- Users Tab 
+        <!-- =============================================================== -->
+        <div id="users" class="tab-content hidden">
+            <div class="bg-white rounded-2xl p-6 shadow-lg">
+                <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+                    <h3 class="text-2xl font-bold text-gray-800">Danh sách người dùng</h3>
+                    <div class="relative w-full sm:w-72">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <i class="fas fa-search text-gray-400"></i>
+                        </div>
+                        <input type="text"
+                               id="user-search"
+                               data-target="users-table-body"
+                               class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition"
+                               placeholder="Tìm kiếm người dùng...">
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left table-auto">
+                        <thead>
+                            <tr class="bg-gray-50 text-gray-600 uppercase text-sm leading-normal">
+                                <th class="py-3 px-6">ID</th>
+                                <th class="py-3 px-6">Tên đăng nhập</th>
+                                <th class="py-3 px-6">Email</th>
+                                <th class="py-3 px-6">Vai trò</th>
+                                <th class="py-3 px-6 text-center">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body" class="text-gray-700 text-sm font-light">
+                            @if (Model.Users != null && Model.Users.Any())
+                            {
+                                foreach (var user in Model.Users)
+                                {
+                                    <tr class="border-b border-gray-200 hover:bg-gray-100">
+                                        <td class="py-4 px-6 font-medium">@user.UserId</td>
+                                        <td class="py-4 px-6">@user.Username</td>
+                                        <td class="py-4 px-6">@user.Email</td>
+                                        <td class="py-4 px-6">
+                                            <span class="px-3 py-1 rounded-full text-xs font-semibold @(user.Role == 0 ? "bg-blue-100 text-blue-800" : "bg-gray-100 text-gray-800")">
+                                                @(user.Role == 0 ? "Người dùng" : "Khác")
+                                            </span>
+                                        </td>
+                                        <td class="py-4 px-6 text-center">
+                                            <div class="flex item-center justify-center space-x-4">
+                                                <a asp-action="GetUserTests" asp-route-userId="@user.UserId" class="w-8 h-8 flex items-center justify-center rounded-lg bg-green-100 text-green-600 hover:bg-green-200 transition-colors" title="Xem bài thi">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <form asp-action="DeleteUser" asp-route-id="@user.UserId" method="post" class="inline" onsubmit="return confirm('Bạn có chắc muốn xóa người dùng này?');">
+                                                    <button type="submit" class="w-8 h-8 flex items-center justify-center rounded-lg bg-red-100 text-red-600 hover:bg-red-200 transition-colors" title="Xóa">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5" class="text-center py-6 text-gray-400">Không có người dùng nào.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination Controls -->
+                @{
+                    int page = Model.CurrentUserPage;
+                    int totalPages = Model.TotalUserPages;
+                }
+
+                <div class="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-6 mt-4">
+                    <div>
+                        <p class="text-sm text-gray-700">
+                            Hiển thị
+                            <span class="font-medium>@((page - 1) * Model.UserPageSize + 1)</span>
+                            tới
+                            <span class="font-medium">
+                                @Math.Min(page * Model.UserPageSize, Model.TotalUsers)
+                            </span>
+                            của
+                            <span class="font-medium">@Model.TotalUsers</span>
+                            kết quả
+                        </p>
+                    </div>
+
+                    <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm">
+
+                        <!-- Previous -->
+                        <a asp-action="Dashboard_Admin"
+                           asp-route-tab="users"
+                           asp-route-userPage="@(page - 1)"
+                           class="@(page == 1 ? "pointer-events-none text-gray-300" : "")
+                  relative inline-flex items-center px-2 py-2 ring-1 ring-gray-300 hover:bg-gray-50">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+
+                        @for (int i = 1; i <= totalPages; i++)
+                        {
+                            <a asp-action="Dashboard_Admin"
+                               asp-route-tab="users"
+                               asp-route-userPage="@i"
+                               class="relative inline-flex items-center px-4 py-2 text-sm font-semibold
+                               @(i == page
+                                                                                                                    ? "bg-blue-600 text-white"
+                                                                                                                    : "text-gray-900 ring-1 ring-gray-300 hover:bg-gray-50")">
+                            @i
+                        </a>
+                                                }
+
+                        <!-- Next -->
+                        <a asp-action="Dashboard_Admin"
+                           asp-route-tab="users"
+                           asp-route-userPage="@(page + 1)"
+                           class="@(page == totalPages ? "pointer-events-none text-gray-300" : "")
+                  relative inline-flex items-center px-2 py-2 ring-1 ring-gray-300 hover:bg-gray-50">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+
+                    </nav>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- =============================================================== -->
+        <!-- Questions Tab
+        <!-- =============================================================== -->
+        <div id="questions" class="tab-content hidden">
+            <div class="bg-white rounded-2xl p-6 shadow-lg">
+                <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+                    <h3 class="text-2xl font-bold text-gray-800">Danh sách câu hỏi</h3>
+                    
+                    <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                        <!-- Category Filter Dropdown -->
+                        <div class="relative w-full sm:w-56">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <i class="fas fa-filter text-gray-400"></i>
+                            </div>
+                            <select id="category-filter" 
+                                    onchange="filterByCategory(this.value)"
+                                    class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition appearance-none bg-white cursor-pointer">
+                                <option value="all" selected="@(string.IsNullOrEmpty(Model.SelectedCategory) || Model.SelectedCategory == "all" ? "selected" : null)">
+                                    Tất cả danh mục
+                                </option>
+                                @if (Model.Categories != null && Model.Categories.Any())
+                                {
+                                    foreach (var category in Model.Categories)
+                                    {
+                                        <option value="@category" selected="@(Model.SelectedCategory == category ? "selected" : null)">
+                                            @category
+                                        </option>
+                                    }
+                                }
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <!-- Search Box -->
+                        <div class="relative w-full sm:w-72">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <i class="fas fa-search text-gray-400"></i>
+                            </div>
+                            <input type="text"
+                                   id="question-search"
+                                   data-target="questions-table-body"
+                                   class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition"
+                                   placeholder="Tìm kiếm câu hỏi...">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left table-auto">
+                        <thead>
+                            <tr class="bg-gray-50 text-gray-600 uppercase text-sm leading-normal">
+                                <th class="py-3 px-6">ID</th>
+                                <th class="py-3 px-6 w-2/5">Nội dung câu hỏi</th>
+                                <th class="py-3 px-6">Danh mục</th>
+                                <th class="py-3 px-6">Ảnh minh họa</th>
+                                <th class="py-3 px-6">Đáp án đúng</th>
+                                <th class="py-3 px-6 text-center">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="questions-table-body" class="text-gray-700 text-sm font-light">
+                            @if (Model.QuestionWithAnswers != null && Model.QuestionWithAnswers.Any())
+                            {
+                                foreach (var item in Model.QuestionWithAnswers)
+                                {
+                                    <tr class="border-b border-gray-200 hover:bg-gray-100">
+                                        <td class="py-4 px-6 font-medium">@item.ID</td>
+                                        <td class="py-4 px-6">@item.QuestionText</td>
+                                        <td class="py-4 px-6">
+                                            @if (!string.IsNullOrEmpty(item.Category))
+                                            {
+                                                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800">
+                                                    @item.Category
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-gray-400 text-xs italic">Chưa phân loại</span>
+                                            }
+                                        </td>
+                                        <td class="py-4 px-6">
+                                            @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                            {
+                                                <img src="@Url.Content(item.ImageUrl)" alt="Ảnh minh họa" class="h-16 w-24 object-cover rounded-md" />
+                                            }
+                                        </td>
+                                        <td class="py-4 px-6 font-semibold text-green-600">@item.CorrectAnswer</td>
+                                        <td class="py-4 px-6 text-center">
+                                            <div class="flex item-center justify-center space-x-4">
+                                                <a asp-controller="Dashboard"
+                                                   asp-action="EditQuestion"
+                                                   asp-route-id="@item.ID"
+                                                   asp-route-tab="questions"
+                                                   asp-route-questionPage="@Model.CurrentQuestionPage"
+                                                   class="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200 transition-colors" title="Sửa">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <form asp-action="DeleteQuestion" asp-route-id="@item.ID" method="post" class="inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa câu hỏi này không?');">
+                                                    <button type="submit" class="w-8 h-8 flex items-center justify-center rounded-lg bg-red-100 text-red-600 hover:bg-red-200 transition-colors" title="Xóa">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center py-6 text-gray-400">
+                                        @if (!string.IsNullOrEmpty(Model.SelectedCategory) && Model.SelectedCategory != "all")
+                                        {
+                                            <span>Không tìm thấy câu hỏi nào trong danh mục "@Model.SelectedCategory"</span>
+                                        }
+                                        else
+                                        {
+                                            <span>Không có câu hỏi nào.</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- ===================== Pagination Controls ===================== -->
+                @{
+                    int questionPage = Model.CurrentQuestionPage;
+                    int questionTotalPages = Model.TotalQuestionPages;
+                }
+
+                @if (questionTotalPages > 0)
+                {
+                    <div class="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-6 mt-4">
+
+                        <!-- Info -->
+                        <p class="text-sm text-gray-700">
+                            Hiển thị
+                            <span class="font-medium">@((questionPage - 1) * Model.QuestionPageSize + 1)</span>
+                            tới
+                            <span class="font-medium">
+                                @Math.Min(questionPage * Model.QuestionPageSize, Model.TotalQuestions)
+                            </span>
+                            của
+                            <span class="font-medium">@Model.TotalQuestions</span>
+                            kết quả
+                            @if (!string.IsNullOrEmpty(Model.SelectedCategory) && Model.SelectedCategory != "all")
+                            {
+                                <span class="text-purple-600 font-semibold">trong danh mục "@Model.SelectedCategory"</span>
+                            }
+                        </p>
+
+                        <!-- Pagination -->
+                        <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm">
+
+                            <!-- Previous -->
+                            <a asp-action="Dashboard_Admin"
+                               asp-route-tab="questions"
+                               asp-route-questionPage="@(questionPage > 1 ? questionPage - 1 : 1)"
+                               asp-route-userPage="@Model.CurrentUserPage"
+                               asp-route-categoryFilter="@Model.SelectedCategory"
+                               class="relative inline-flex items-center px-2 py-2 ring-1 ring-gray-300
+                                  @(questionPage == 1 ? "pointer-events-none text-gray-300" : "hover:bg-gray-50")">
+                                <i class="fas fa-chevron-left"></i>
+                            </a>
+
+                            <!-- Pages -->
+                            @for (int i = 1; i <= questionTotalPages; i++)
+                            {
+                                <a asp-action="Dashboard_Admin"
+                                   asp-route-tab="questions"
+                                   asp-route-questionPage="@i"
+                                   asp-route-userPage="@Model.CurrentUserPage"
+                                   asp-route-categoryFilter="@Model.SelectedCategory"
+                                   class="relative inline-flex items-center px-4 py-2 text-sm font-semibold
+                                           @(i == questionPage
+                                                                                                                                 ? "bg-blue-600 text-white"
+                                                                                                                                 : "text-gray-900 ring-1 ring-gray-300 hover:bg-gray-50")">
+                            @i
+                        </a>
+                                                }
+
+                            <!-- Next -->
+                            <a asp-action="Dashboard_Admin"
+                               asp-route-tab="questions"
+                               asp-route-questionPage="@(questionPage<questionTotalPages? questionPage + 1 : questionTotalPages)"
+                               asp-route-userPage="@Model.CurrentUserPage"
+                               asp-route-categoryFilter="@Model.SelectedCategory"
+                               class="relative inline-flex items-center px-2 py-2 ring-1 ring-gray-300
+                                  @(questionPage == questionTotalPages ? "pointer-events-none text-gray-300" : "hover:bg-gray-50")">
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+
+                        </nav>
+                    </div>
+                }
+
+            </div> 
+        </div>
+                <!-- =============================================================== -->
+                <!-- Tests Tab -->
+                <!-- =============================================================== -->
+                <div id="tests" class="tab-content hidden">
+                    <div class="bg-white rounded-2xl p-6 shadow-lg">
+                        <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+                            <h3 class="text-2xl font-bold text-gray-800">Quản lý bài thi</h3>
+                                <a asp-controller="TestAdmin" asp-action="Index" class="px-5 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200 inline-flex items-center shadow-lg">
+                                    <i class="fas fa-plus mr-2"></i>
+                                    Thêm bài thi
+                                </a>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left table-auto">
+                                <thead>
+                                    <tr class="bg-gray-50 text-gray-600 uppercase text-sm leading-normal">
+                                        <th class="py-3 px-6">ID</th>
+                                        <th class="py-3 px-6">Số câu hỏi</th>
+                                        <th class="py-3 px-6">Thời gian (phút)</th>
+                                        <th class="py-3 px-6">Điểm đạt</th>
+                                        <th class="py-3 px-6 text-center">Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tests-table-body" class="text-gray-700 text-sm font-light">
+                                    @if (Model.Tests != null && Model.Tests.Any())
+                                    {
+                                        foreach (var test in Model.Tests)
+                                        {
+                                            <tr class="border-b border-gray-200 hover:bg-gray-100">
+                                                <td class="py-4 px-6 font-medium">@test.CategoryId</td>
+                                                <td class="py-4 px-6">@test.QuestionCount</td>
+                                                <td class="py-4 px-6">@test.DurationMinutes</td>
+                                                <td class="py-4 px-6 font-semibold text-green-600">@test.PassingScore</td>
+                                                <td class="py-4 px-6 text-center">
+                                                    <div class="flex item-center justify-center space-x-4">
+                                                        <button type="button" 
+                                                                onclick="openEditTestModal(@test.CategoryId)" 
+                                                                class="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200 transition-colors" 
+                                                                title="Sửa">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                        <form asp-action="DeleteTest" 
+                                                              asp-controller="Dashboard" 
+                                                              asp-route-id="@test.CategoryId" 
+                                                              method="post" 
+                                                              class="inline" 
+                                                              onsubmit="return confirm('Bạn có chắc chắn muốn xóa bài thi này không? Hành động này không thể hoàn tác!');">
+                                                            @Html.AntiForgeryToken()
+                                                            <button type="submit" 
+                                                                    class="w-8 h-8 flex items-center justify-center rounded-lg bg-red-100 text-red-600 hover:bg-red-200 transition-colors" 
+                                                                    title="Xóa">
+                                                                <i class="fas fa-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="5" class="text-center text-gray-400 py-6">
+                                                Không có bài thi nào
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                <!-- Pagination cho Tests -->
+                @{ int testCurrentPage = Model.CurrentTestPage; int testTotalPages = Model.TotalTestPages; }
+                <div class="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-6 mt-4">
+                    <p class="text-sm text-gray-700">
+                        Hiển thị <span class="font-medium>@((testCurrentPage - 1) * Model.TestPageSize + 1)</span>
+                        tới <span class="font-medium">@Math.Min(testCurrentPage * Model.TestPageSize, Model.TotalTests)</span>
+                        của <span class="font-medium">@Model.TotalTests</span> bài thi
+                    </p>
+                    <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm">
+                        <a asp-action="Dashboard_Admin" asp-route-tab="tests" asp-route-testPage="@(testCurrentPage - 1)" class="relative inline-flex items-center px-2 py-2 ring-1 ring-gray-300 @(testCurrentPage == 1 ? "pointer-events-none text-gray-300" : "hover:bg-gray-50")">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                        @for (int i = 1; i <= testTotalPages; i++)
+                        {
+                            <a asp-action="Dashboard_Admin" asp-route-tab="tests" asp-route-testPage="@i" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold @(i == testCurrentPage ? "bg-blue-600 text-white" : "text-gray-900 ring-1 ring-gray-300 hover:bg-gray-50")">
+                                @i
+                            </a>
+                        }
+                        <a asp-action="Dashboard_Admin" asp-route-tab="tests" asp-route-testPage="@(testCurrentPage + 1)" class="relative inline-flex items-center px-2 py-2 ring-1 ring-gray-300 @(testCurrentPage == testTotalPages ? "pointer-events-none text-gray-300" : "hover:bg-gray-50")">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </nav>
+                </div>
+
+
+                    </div>
+                </div>
+
+                <!-- =============================================================== -->
+                <!-- Feedback Tab -->
+                <!-- =============================================================== -->
+                <div id="feedback" class="tab-content hidden">
+                    <div class="bg-white rounded-2xl p-6 shadow-lg">
+                        <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+                            <h3 class="text-2xl font-bold text-gray-800">Danh sách phản hồi</h3>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left table-auto">
+                                <thead>
+                                    <tr class="bg-gray-50 text-gray-600 uppercase text-sm leading-normal">
+                                        <th class="py-3 px-6">ID User</th>
+                                        <th class="py-3 px-6">Tiêu đề</th>
+                                        <th class="py-3 px-6 w-2/5">Nội dung</th>
+                                        <th class="py-3 px-6">Ngày Tạo</th>
+                                        <th class="py-3 px-6">Trạng thái</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="feedback-table-body" class="text-gray-700 text-sm font-light">
+                                    @if (Model.Feedbacks != null && Model.Feedbacks.Any())
+                                    {
+                                        foreach (var fb in Model.Feedbacks)
+                                        {
+                                            <tr class="border-b border-gray-200 hover:bg-gray-100" id="row-@fb.FeedbackId">
+                                                <td class="py-4 px-6">@fb.UserId</td>
+                                                <td class="py-4 px-6">@fb.Title</td>
+                                                <td class="py-4 px-6">@fb.Message</td>
+                                                <td class="py-4 px-6">
+                                                    @(fb.CreatedAt?.ToString("dd/MM/yyyy HH:mm") ?? "")
+                                                </td>
+                                                <td class="py-4 px-6 text-center">
+                                                    <span id="status-@fb.FeedbackId"
+                                                          data-id="@fb.FeedbackId"
+                                                          class="status-badge cursor-pointer px-3 py-1 rounded-full text-xs font-semibold @(fb.Status == "Chờ Xử Lý" ? "bg-yellow-100 text-yellow-800 hover:bg-yellow-200" : "bg-green-100 text-green-800")">
+                                                        @fb.Status
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="5" class="text-center text-gray-400 py-6">
+                                                Không có phản hồi nào
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                                <!-- Pagination cho Feedback -->
+                                @{
+                                    int feedbackCurrentPage = Model.CurrentFeedbackPage;
+                                    int feedbackTotalPages = Model.TotalFeedbackPages;
+                                }
+                                
+                                       <div class="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-6 mt-4">
+                                      <p class="text-sm text-gray-700">
+                                        Hiển thị <span class="font-medium>@((feedbackCurrentPage - 1) * Model.FeedbackPageSize + 1)</span>
+                                        tới <span class="font-medium">@Math.Min(feedbackCurrentPage * Model.FeedbackPageSize, Model.TotalFeedbacks)</span>
+                                        của <span class="font-medium">@Model.TotalFeedbacks</span> phản hồi
+                                    </p>
+
+                                        <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm">
+                                            <!-- Previous -->
+                                            <a asp-action="Dashboard_Admin"
+                                               asp-route-tab="feedback"
+                                               asp-route-feedbackPage="@(feedbackCurrentPage - 1)"
+                                               class="relative inline-flex items-center px-2 py-2 ring-1 ring-gray-300 @(feedbackCurrentPage == 1 ? "pointer-events-none text-gray-300" : "hover:bg-gray-50")">
+                                                <i class="fas fa-chevron-left"></i>
+                                            </a>
+
+                                            <!-- Page numbers -->
+                                            @for (int i = 1; i <= feedbackTotalPages; i++)
+                                            {
+                                                <a asp-action="Dashboard_Admin"
+                                                   asp-route-tab="feedback"
+                                                   asp-route-feedbackPage="@i"
+                                                   class="relative inline-flex items-center px-4 py-2 text-sm font-semibold @(i == feedbackCurrentPage ? "bg-blue-600 text-white" : "text-gray-900 ring-1 ring-gray-300 hover:bg-gray-50")">
+                                                    @i
+                                                </a>
+                                            }
+
+                                            <!-- Next -->
+                                            <a asp-action="Dashboard_Admin"
+                                               asp-route-tab="feedback"
+                                               asp-route-feedbackPage="@(feedbackCurrentPage + 1)"
+                                               class="relative inline-flex items-center px-2 py-2 ring-1 ring-gray-300 @(feedbackCurrentPage == feedbackTotalPages ? "pointer-events-none text-gray-300" : "hover:bg-gray-50")">
+                                                <i class="fas fa-chevron-right"></i>
+                                            </a>
+                                        </nav>
+                                    </div>
+                                
+                    </div>
+                </div>
+
+
+                
+
+
+
+    </main>
+
+    <div id="message-modal" class="modal">
+        <div class="modal-content">
+            <span id="close-message-modal" class="close-btn absolute top-4 right-4 text-gray-500 text-2xl font-bold cursor-pointer hover:text-gray-700">&times;</span>
+            <h2 id="message-modal-title" class="text-xl font-semibold text-gray-800 mb-4">Thông báo</h2>
+            <p id="message-modal-text" class="text-gray-700 mb-4"></p>
+            <div class="flex justify-end space-x-2">
+                <button id="message-modal-cancel" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg font-medium hover:bg-gray-400 transition-colors duration-200">Hủy</button>
+                <button id="message-modal-confirm" class="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Test Modal -->
+    <div id="editTestModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg w-full max-w-md p-6">
+            <h3 class="text-lg font-semibold mb-4">Chỉnh sửa bài thi</h3>
+            <input type="hidden" id="modalCategoryId" />
+            <div class="mb-3">
+                <label class="block text-sm font-medium text-gray-700">Số câu hỏi</label>
+                <input id="modalQuestionCount" type="number" min="1" class="mt-1 block w-full border rounded px-3 py-2" />
+            </div>
+            <div class="mb-3">
+                <label class="block text-sm font-medium text-gray-700">Thời gian (phút)</label>
+                <input id="modalDurationMinutes" type="number" min="1" class="mt-1 block w-full border rounded px-3 py-2" />
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Điểm đạt</label>
+                <input id="modalPassingScore" type="number" min="1" class="mt-1 block w-full border rounded px-3 py-2" />
+            </div>
+            <div class="flex justify-end space-x-2">
+                <button type="button" onclick="closeEditTestModal()" class="px-4 py-2 rounded bg-gray-200">Hủy</button>
+                <button type="button" onclick="submitEditTestModal()" class="px-4 py-2 rounded bg-blue-600 text-white">Lưu</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function openEditTestModal(categoryId) {
+            try {
+                const resp = await fetch(`/TestAdmin/GetCategory?id=${categoryId}`);
+                if (!resp.ok) throw new Error('Không thể tải dữ liệu.');
+                const json = await resp.json();
+                if (!json.success) throw new Error(json.message || 'Lỗi');
+
+                const data = json.data;
+                document.getElementById('modalCategoryId').value = data.categoryId;
+                document.getElementById('modalQuestionCount').value = data.questionCount;
+                document.getElementById('modalDurationMinutes').value = data.durationMinutes;
+                document.getElementById('modalPassingScore').value = data.passingScore;
+
+                document.getElementById('editTestModal').classList.remove('hidden');
+            } catch (err) {
+                alert('Lỗi: ' + err.message);
+            }
+        }
+
+        function closeEditTestModal() {
+            document.getElementById('editTestModal').classList.add('hidden');
+        }
+
+        async function submitEditTestModal() {
+            const dto = {
+                CategoryId: parseInt(document.getElementById('modalCategoryId').value, 10),
+                QuestionCount: parseInt(document.getElementById('modalQuestionCount').value, 10),
+                DurationMinutes: parseInt(document.getElementById('modalDurationMinutes').value, 10),
+                PassingScore: parseInt(document.getElementById('modalPassingScore').value, 10)
+            };
+
+            try {
+                const resp = await fetch('/TestAdmin/UpdateCategory', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dto) });
+                const result = await resp.json();
+                if (!resp.ok) throw new Error(result.message || 'Lỗi lưu');
+
+                closeEditTestModal();
+                location.reload();
+            } catch (err) {
+                alert('Lỗi lưu: ' + err.message);
+            }
+        }
+
+        function filterByCategory(category) {
+            const currentPage = '@Model.CurrentQuestionPage';
+            const currentUserPage = '@Model.CurrentUserPage';
+            
+            let url = '@Url.Action("Dashboard_Admin", "Dashboard")' + 
+                      '?tab=questions' +
+                      '&categoryFilter=' + encodeURIComponent(category) +
+                      '&questionPage=1' + 
+                      '&userPage=' + currentUserPage;
+            
+            window.location.href = url;
+        }
+    </script>
+</body>
+</html>
+
+

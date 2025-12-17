@@ -1,0 +1,161 @@
+﻿@using DrivingTest.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    var showLogin = ViewBag.ShowLogin == null || (bool)ViewBag.ShowLogin;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập & Đăng ký</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <div class="bg-white rounded-3xl shadow-2xl p-8 md:p-12 w-full max-w-md relative">
+        <a asp-controller="Home" asp-action="Home" class="absolute top-4 left-4 text-gray-500 hover:text-blue-600 transition duration-300 flex items-center group">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            <span class="text-sm font-medium">Quay lại</span>
+        </a>
+
+        <div class="flex justify-center mb-8 mt-8">
+            <button id="show-login" class="px-6 py-2 font-bold text-gray-800 border-b-2 border-transparent transition duration-300 hover:border-blue-600">Đăng nhập</button>
+            <button id="show-register" class="px-6 py-2 font-bold text-gray-800 border-b-2 border-transparent transition duration-300 hover:border-blue-600">Đăng ký</button>
+        </div>
+
+        <div id="dynamic-message-area" class="mb-4"></div>
+
+        @if (TempData["RegisterSuccess"] != null) { <div class="mb-4 p-3 rounded bg-green-100 text-green-800 text-center font-semibold">@TempData["RegisterSuccess"]</div> }
+        @if (ViewBag.RegisterError != null) { <div class="mb-4 p-3 rounded bg-red-100 text-red-800 text-center font-semibold">@ViewBag.RegisterError</div> }
+        @if (ViewBag.LoginError != null) { <div class="mb-4 p-3 rounded bg-red-100 text-red-800 text-center font-semibold">@ViewBag.LoginError</div> }
+
+        <form id="login-form" asp-action="Login" asp-controller="Authenticator" method="post" class="space-y-6">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-6">Đăng nhập</h2>
+            <div>
+                <label for="login-email" class="block text-sm font-medium text-gray-700">Email</label>
+                <input type="email" id="login-email" name="email" required class="mt-1 block w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition duration-300">
+            </div>
+            <div>
+                <label for="login-password" class="block text-sm font-medium text-gray-700">Mật khẩu</label>
+                <input type="password" id="login-password" name="password" required class="mt-1 block w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition duration-300">
+            </div>
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <input id="show-password-checkbox" type="checkbox" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" onclick="togglePassword()">
+                    <label for="show-password-checkbox" class="ml-2 block text-sm text-gray-900">Hiển thị mật khẩu</label>
+                </div>
+                <div class="text-sm"><a href="#" id="forgot-link" class="font-medium text-blue-600 hover:text-blue-500">Quên mật khẩu?</a></div>
+            </div>
+            <div><button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-full shadow-lg text-sm font-bold text-white bg-blue-600 hover:bg-blue-700">Đăng nhập</button></div>
+        </form>
+
+        <form id="register-form" method="post" class="space-y-6 hidden" onsubmit="startRegistration(event)">
+            <h2 class="text-3xl font-bold text-center text-gray-900 mb-6">Đăng ký</h2>
+            <div>
+                <label for="register-username" class="block text-sm font-medium text-gray-700">Tên đăng nhập</label>
+                <input type="text" id="register-username" name="username" required class="mt-1 block w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-xl">
+            </div>
+            <div>
+                <label for="register-email" class="block text-sm font-medium text-gray-700">Email</label>
+                <input type="email" id="register-email" name="email" required class="mt-1 block w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-xl">
+            </div>
+            <div>
+                <label for="register-password" class="block text-sm font-medium text-gray-700">Mật khẩu</label>
+                <input type="password" id="register-password" name="password" required class="mt-1 block w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-xl">
+            </div>
+            <div>
+                <label for="confirm-password" class="block text-sm font-medium text-gray-700">Xác nhận mật khẩu</label>
+                <input type="password" id="confirm-password" name="confirmPassword" required class="mt-1 block w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-xl">
+            </div>
+            <div>
+                <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-full shadow-lg text-sm font-bold text-white bg-blue-600 hover:bg-blue-700">Đăng ký</button>
+            </div>
+        </form>
+
+        <div id="verification-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+            <div class="bg-white rounded-lg p-6 w-full max-w-md text-center">
+                <h3 class="text-lg font-semibold mb-4">Xác thực email</h3>
+                <p class="mb-4">Một email xác thực đã được gửi tới địa chỉ bạn cung cấp. Vui lòng mở email và nhấn vào liên kết để hoàn tất đăng ký.</p>
+                <p class="mb-4 text-sm text-gray-500">Nếu bạn chưa nhận được email, kiểm tra hộp thư rác hoặc nhấn Gửi lại.</p>
+                <div class="flex justify-center gap-3">
+                    <button id="resend-btn" class="px-4 py-2 rounded bg-gray-200">Gửi lại</button>
+                    <button id="close-modal-btn" class="px-4 py-2 rounded bg-blue-600 text-white">Đóng</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="forgot-password-form" class="hidden space-y-4 mt-6">
+            <h3 class="text-xl font-bold text-center text-gray-900">Khôi phục mật khẩu</h3>
+            <div>
+                <label for="forgot-email" class="block text-sm font-medium text-gray-700">Nhập email của bạn</label>
+                <input type="email" id="forgot-email" name="email" required class="mt-1 block w-full px-4 py-2 bg-white border border-gray-300 rounded-xl">
+            </div>
+            <div id="forgot-msg" class="text-center text-sm font-semibold"></div>
+            <div><button id="send-new-password" type="button" class="w-full flex justify-center py-2 px-4 rounded-full bg-blue-600 text-white">Gửi mật khẩu mới</button></div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const loginBtn = document.getElementById('show-login');
+                const registerBtn = document.getElementById('show-register');
+                const loginForm = document.getElementById('login-form');
+                const registerForm = document.getElementById('register-form');
+                const forgotLink = document.getElementById('forgot-link');
+                const forgotForm = document.getElementById('forgot-password-form');
+                const resendBtn = document.getElementById('resend-btn');
+                const closeModalBtn = document.getElementById('close-modal-btn');
+                const verificationModal = document.getElementById('verification-modal');
+
+                function showLoginForm() { loginForm.classList.remove('hidden'); registerForm.classList.add('hidden'); forgotForm.classList.add('hidden'); loginBtn.classList.add('border-blue-600'); registerBtn.classList.remove('border-blue-600'); }
+                function showRegisterForm() { loginForm.classList.add('hidden'); registerForm.classList.remove('hidden'); forgotForm.classList.add('hidden'); loginBtn.classList.remove('border-blue-600'); registerBtn.classList.add('border-blue-600'); }
+                loginBtn.addEventListener('click', showLoginForm);
+                registerBtn.addEventListener('click', showRegisterForm);
+                forgotLink.addEventListener('click', (e) => { e.preventDefault(); forgotForm.classList.toggle('hidden'); if (!forgotForm.classList.contains('hidden')) { loginForm.classList.add('hidden'); registerForm.classList.add('hidden'); } });
+
+                closeModalBtn.addEventListener('click', () => { verificationModal.classList.add('hidden'); });
+                resendBtn.addEventListener('click', async () => { /* TODO: implement resend using token saved in UI */ alert('Gửi lại yêu cầu xác thực — kiểm tra email.'); });
+            });
+
+            async function startRegistration(e) {
+                e.preventDefault();
+                const username = document.getElementById('register-username').value.trim();
+                const email = document.getElementById('register-email').value.trim();
+                const password = document.getElementById('register-password').value;
+                const confirm = document.getElementById('confirm-password').value;
+
+                if (!username || !email || !password || password !== confirm) {
+                    alert('Vui lòng điền đầy đủ và đảm bảo mật khẩu khớp.');
+                    return;
+                }
+
+                try {
+                    const resp = await fetch('/Authenticator/StartRegistration', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, email, password }) });
+                    const result = await resp.json();
+                    if (!resp.ok) throw new Error(result.message || 'Lỗi server');
+
+                    document.getElementById('verification-modal').classList.remove('hidden');
+
+                    if (result.token) sessionStorage.setItem('registrationToken', result.token);
+                } catch (err) {
+                    alert('Đăng ký thất bại: ' + (err.message || err));
+                }
+            }
+
+            const showLoginOnLoad = @Html.Raw(showLogin.ToString().ToLower());
+            if (showLoginOnLoad) { document.getElementById('show-login').click(); } else { document.getElementById('show-register').click(); }
+
+            function togglePassword() { const passwordInput = document.getElementById('login-password'); passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password'; }
+        </script>
+    </div>
+</body>
+</html>
